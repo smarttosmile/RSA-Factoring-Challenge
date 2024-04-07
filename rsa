@@ -1,32 +1,36 @@
 #!/usr/bin/python3
 """
-Factorize numbers in a file into a product of two prime numbers
+Factorize as many numbers as possible into
+a product of two smaller prime numbers.
+
+Functions:
+    factorize()
+
+Usage: ./rsa <file>
+    Where <file> is a file containing one natural number to factor.
+Output format: n=p*q
+    p and q are always prime numbers.
 """
+
 import sys
+import ctypes
 
 
 def factorize():
     """
-    A function to search file and factorize the given set of numbers into two prime numbers (format n = p*q)
+    Factorizes as many numbers as possible into
+    a product of two smaller prime numbers and print them.
     """
-    try:
-        file = sys.argv[1]
-        with open(file) as f:
-            for line_number in f:
-                line_number = int(line_number)
-                if line_number % 2 == 0:
-                        print("{}={}*{}".format(line_number, line_number // 2, 2))
-                        continue
-                i = 3
-                while i < line_number // 2:
-                    if line_number % i == 0:
-                        print("{}={}*{}".format(line_number, line_number // i, i))
-                        break
-                    i = i + 2
-                if i == (line_number // 2) + 1:
-                    print("{}={}*{}".format(line_number, line_number, 1))
-    except (IndexError):
-        pass
+
+    c_factors = ctypes.CDLL("./lib_factors.so")
+    c_factors.find_divisor.argtypes = [ctypes.c_long]
+    with open(sys.argv[1]) as f:
+        line = f.readline()
+        while line != '':
+            num = int(line)
+            c_factors.find_divisor(num)
+            line = f.readline()
 
 
-factorize()
+if __name__ == "__main__":
+    factorize()

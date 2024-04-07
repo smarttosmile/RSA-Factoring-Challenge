@@ -1,29 +1,60 @@
 #!/usr/bin/python3
-"""factorize given set of numbers in a file to product of two small numbers"""
-from sys import argv
+"""
+Factorize as many numbers as possible into a product of two smaller numbers.
+
+Functions:
+    find_divisor(num) -> int
+    factorize()
+
+Usage: ./factors <file>
+    Where <file> is a file containing natural numbers to factor.
+    One number per line.
+Output format: n=p*q
+    One factorization per line.
+    p and q are not always prime numbers.
+"""
+
+import sys
 
 
-def factorize(number_to_check):
-    """"find two small numbers that multiply to give a given number"""
-    i = 2
+def find_divisor(num: int) -> int:
+    """
+    Finds the smallest divisor of a given number.
+    Args:
+        num (int): A number to find the smallest divisor for.
+    Returns:
+        smallest divisor if found
+        0 if the number is prime
+    """
 
-    if number_to_check < 2:
-        return
-    
-    while number_to_check % i:
-        i += 1
-    print("{:.0f}={:.0f}*{:.0f}".format(number_to_check, number_to_check / i, i))
+    while num % 2 == 0:
+        return 2
 
-if len(argv) != 2:
-    exit()
+    factor = 3
+    while factor * factor <= num:
+        if num % factor == 0:
+            return factor
+        else:
+            factor += 2
 
-try:
-    with open(argv[1]) as file:
-        line = file.readline()
+    return 1
 
-        while line != "":
-            number_to_check = int(line.split('\n')[0])
-            factorize(number_to_check)
-            line = file.readline()
-except:
-    pass
+
+def factorize():
+    """
+    Factorizes as many numbers as possible into
+    a product of two smaller numbers and print them.
+    """
+
+    with open(sys.argv[1]) as f:
+        line = f.readline()
+        while line != '':
+            num = int(line)
+            div = find_divisor(num)
+            print(f"{num}={num//div}*{div}")
+
+            line = f.readline()
+
+
+if __name__ == "__main__":
+    factorize()

@@ -1,23 +1,33 @@
 #include <stdio.h>
 
-int main()
+/*
+ * find_divisor - finds the smallest divisor of a given number.
+ * @num: a number to find the smallest divisor for.
+ * Return: smallest divisor if found, or 0 if the number is prime.
+ */
+int find_divisor(long int num)
 {
-    long long int num = 239809320265259;
-    long int factor1 = 2;
-    long int factor2;
+	long int factor;
 
-    while (num % factor1)
-    {
-        if (factor1 <= num)
-        {
-            factor1++;
-        }
-        else {
-            return (-1);
-        }
-    }
+	if (num % 2 == 0)
+	{
+		printf("%lu=%lu*%i\n", num, num / 2, 2);
+		return 0;
+	}
 
-    factor2 = num / factor1;
-    printf("%lld = %ld * %ld\n", num, factor2, factor1);
-    return (0);
+	factor = 3;
+	while (factor * factor <= num)
+	{
+		if (num % factor == 0)
+		{
+			printf("%lu=%lu*%lu\n", num, num / factor, factor);
+			return 0;
+		}
+		else
+			factor += 2;
+	}
+
+	printf("%lu=%lu*%i\n", num, num, 1);
+
+	return 0;
 }

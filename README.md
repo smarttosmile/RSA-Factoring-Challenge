@@ -1,97 +1,126 @@
-# RSA-Factoring-Challenge
+<a name="readme-top"></a>
 
-![RSA-Image](images/RSA-img.JPG)
+# RSA Factoring Challenge
+Factoring as many numbers as possible into a product of two smaller numbers.
 
-## Description
+## Table of Contents
+- [Introduction](#introduction)
+  - [What is the RSA algorithm](#What-is-the-RSA-algorithm)
+  - [What is the RSA factoring challenge](#What-is-the-RSA-factoring-challenge)
+- [Compilation](#compilation)
+- [Usage](#usage)
+  - [Run factors](#run-factors)
+  - [Run rsa](#run-rsa)
+- [Output](#output)
+  - [Factors output](#factors-output)
+  - [Rsa output](#rsa-output)
+- [Files](#files)
 
-This project is designed to factorize as many numbers as possible into a product of two smaller numbers.
-It works perfectly for that except the case of bignums (numbers bigger than long long unsigned integers)
-please any contribution towards making this project work for bignums will be highly appreciated.
+## Introduction
 
-## Information
+### What is the RSA algorithm
+The RSA algorithm is a widely used public-key cryptosystem that is used for secure data transmission. It is an asymmetric encryption algorithm that uses a key pair to encrypt and decrypt data. The key pair consists of a public key that is accessible to anyone and a private key that is kept secret by the key pair creator.
 
-- HTTPS uses Secure Socket Layer to encrypt data that is transferred between client and server. SSL uses the RSA algorithm, an asymmetric encryption technology. The precise details of how the algorithm works is complex, but basically it leverages the fact that whilst multiplying two large prime numbers together is easy, factoring the result back into the constituent primes is very, very hard. How all SSL/RSA encryption works is:
+The RSA algorithm involves four steps: key generation, key distribution, encryption, and decryption. The RSA algorithm is based on the principle that it is easy to multiply large numbers, but factoring large numbers is very difficult.
 
-- The server generates two large prime numbers, and multiplies them together. This is called the "public key". This key is made available to any client which wishes to transmit data securely to the server. The client uses this "public key" to encrypt data it wishes to send. Now because this is an asymmetric algorithm, the public key cannot be used to decrypt the transmitted data, only encrypt it. In order to decrypt, you need the original prime numbers, and only the server has these (the "private key"). On receiving the encrypted data, the server uses its private key to decrypt the transmission.
+The public key consists of two numbers where one number is a multiplication of two large prime numbers, and the private key is also derived from the same two prime numbers. The client receives this data and decrypts it, and nobody else except the browser can decrypt the data even if a third party has the public key of the browser.
 
-- In the case of you browsing the web, your browser gives the server its public key. The server uses this key to encrypt data to be sent to your browser, which then uses its private key to decrypt.
+### What is the RSA factoring challenge
+The RSA Factoring Challenge was a public challenge issued by RSA Security on March 18, 1991 to encourage the academic community to find more efficient ways of factoring large prime numbers.
 
-- So yes all data transmitted to/from server over HTTPs is encrypted and encrypted well. Typical SSL implementations use 128 or 256 digits for their keys. To break this you need a truly vast amount of computing resources.
+The challenge was to factorize two large numbers that were the product of two prime numbers each. The first number was a 129-digit integer, and the second number was a 130-digit integer. The challenge lasted for over a decade, and the first successful factorization of the 129-digit number was achieved in 1994 by a team of researchers using a special-purpose computer. Finally, in 2009, the 130-digit integer was factored using a general number field sieve algorithm. The RSA Factoring Challenge contributed significantly to the development of modern cryptography.
 
-## Tasks
+## Compilation
+Compile the C source code into a shared object library:
 
-- ### 0. Factorize all the things!
-
-```
-Factorize as many numbers as possible into a product of two smaller numbers.
-
-	Usage: factors <file>
-		where <file> is a file containing natural numbers to factor.
-	Output format: n=p*q
-		one factorization per line
-		p and q don’t have to be prime numbers
-
-	julien@ubuntu:~/factors$ cat tests/test00
-	4
-	12
-	34
-	128
-	1024
-	4958
-	1718944270642558716715
-	9
-	99
-	999
-	9999
-	9797973
-	49
-	239809320265259
-	julien@ubuntu:~/factors$ time ./factors tests/test00
-	4=2*2
-	12=6*2
-	34=17*2
-	128=64*2
-	1024=512*2
-	4958=2479*2
-	1718944270642558716715=343788854128511743343*5
-	9=3*3
-	99=33*3
-	999=333*3
-	9999=3333*3
-	9797973=3265991*3
-	49=7*7
-	239809320265259=15485783*15485773
-
-	real    0m0.009s
-	user    0m0.008s
-	sys 0m0.001s
+```bash
+gcc -fPIC -shared -o lib_factors.so factors.c
 ```
 
-- ### 1. RSA Factoring Challenge
+## Usage
 
-```
-	RSA Laboratories states that: for each RSA number n, there exist prime numbers p and q such that
+### Run factors:
 
-	n = p × q. The problem is to find these two primes, given only n.
-
-	This task is the same as task 0, except:
-
-	p and q are always prime numbers
-	There is only one number in the files
-	julien@ubuntu:~/RSA Factoring Challenge$ cat tests/rsa-1
-	6
-	julien@ubuntu:~/RSA Factoring Challenge$ ./rsa tests/rsa-1
-	6=3*2
-	julien@ubuntu:~/RSA Factoring Challenge$ cat tests/rsa-2
-	77
+```bash
+./factors <file>
 ```
 
-## Author
+Where `file` is a file containing natural numbers to factor.
+One number per line.
 
-[David Atat](www.github.com/daveeazi)
+### Run rsa:
 
-## Resources
+```bash
+./rsa <file>
+```
 
-- [RSA](<https://en.wikipedia.org/wiki/RSA_(cryptosystem%29)>)
-- [How does HTTPS provide security?](https://stackoverflow.com/questions/3968095/how-does-https-provide-security)
-- [Prime Factorization](https://privacycanada.net/mathematics/prime-factorization/)
+Where `file` is a file containing one natural number to factor.
+
+## Output
+
+### Factors output
+
+Output format: **n=p*q**
+- One factorization per line.
+- `p` and `q` are not always prime numbers.
+
+```bash
+$ cat tests/test00
+4
+12
+34
+128
+1024
+4958
+1718944270642558716715
+9
+99
+999
+9999
+9797973
+49
+$ ./factos tests/test00
+4=2*2
+12=6*2
+34=17*2
+128=64*2
+1024=512*2
+4958=2479*2
+1718944270642558716715=343788854128511743343*5
+9=3*3
+99=33*3
+999=333*3
+9999=3333*3
+9797973=3265991*3
+49=7*7
+239809320265259=15485783*15485773
+$
+```
+
+### Rsa output
+
+Output format: **n=p*q**
+- `p` and `q` are always prime numbers.
+
+```bash
+$ cat tests/rsa-*
+$ ./rsa tests/rsa-0
+6=3*2
+$ ./rsa tests/rsa-1
+77=11*7
+$ ./rsa tests/rsa-2
+239821585064027=15486481*15485867
+$ ./rsa tests/rsa-3
+2497885147362973=49979141*49978553
+$
+```
+
+## Files
+|File|Description|
+|---|---|
+|[factors](factors)|Factorize as many numbers as possible into a product of two smaller numbers.|
+|[factors.c](factors.c)|Finds the smallest divisor of a given number.|
+|[lib_factors.so](lib_factors.so)|A shared object library file of the [factors.c](factors.c) file that can be used in the [rsa](rsa) file.|
+|[rsa](rsa)|Factorize as many numbers as possible into a product of two smaller prime numbers.|
+
+<p align="right"><a href="#readme-top">Back to Top</a></p>
